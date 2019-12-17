@@ -1,0 +1,125 @@
+13.罗马数字转整数
+罗马数字包含以下七种字符: I， V， X， L，C，D 和 M。
+
+字符          数值
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+例如， 罗马数字 2 写做 II ，即为两个并列的 1。12 写做 XII ，即为 X + II 。 27 写做  XXVII, 即为 XX + V + II 。
+
+通常情况下，罗马数字中小的数字在大的数字的右边。但也存在特例，例如 4 不写做 IIII，而是 IV。数字 1 在数字 5 的左边，所表示的数等于大数 5 减小数 1 得到的数值 4 。同样地，数字 9 表示为 IX。这个特殊的规则只适用于以下六种情况：
+
+I 可以放在 V (5) 和 X (10) 的左边，来表示 4 和 9。
+X 可以放在 L (50) 和 C (100) 的左边，来表示 40 和 90。 
+C 可以放在 D (500) 和 M (1000) 的左边，来表示 400 和 900。
+给定一个罗马数字，将其转换成整数。输入确保在 1 到 3999 的范围内。
+
+示例 1:
+
+输入: "III"
+输出: 3
+示例 2:
+
+输入: "IV"
+输出: 4
+示例 3:
+
+输入: "IX"
+输出: 9
+示例 4:
+
+输入: "LVIII"
+输出: 58
+解释: L = 50, V= 5, III = 3.
+示例 5:
+
+输入: "MCMXCIV"
+输出: 1994
+解释: M = 1000, CM = 900, XC = 90, IV = 4.
+
+我自己最初思考的方法是将IV，IX等情况单独判断，剩下的用字符和数字对应相加的办法算出结果，但在测试一些复杂的用例时出现了问题。
+后来改进增加前后字符大小判断，若是后一个字符代表的数字大于前一个字符，就减去前一个字符代表的数字，否则加上前一个字符代表的数字：
+var romanToInt = function(s) {
+    const mapper = {
+        I:1, V:5, X:10, L:50, C:100, D:500, M:1000
+    }
+    const arr = s.split('')
+    let num = 0, lastN = 0
+    for(let i = arr.length - 1; i >= 0; i--) {
+        n = mapper[n]
+        n >= lastN ? (num +=n, lastN = n) : num -= n
+    }
+    return num
+};
+
+class Solution {
+    public int romanToInt(String s) {
+        int sum = 0;
+        int preNum = getValue(s.charAt(0));
+        for(int i = 1;i < s.length(); i ++) {
+            int num = getValue(s.charAt(i));
+            if(preNum < num) {
+                sum -= preNum;
+            } else {
+                sum += preNum;
+            }
+            preNum = num;
+        }
+        sum += preNum;
+        return sum;
+    }
+    
+    private int getValue(char ch) {
+        switch(ch) {
+            case 'I': return 1;
+            case 'V': return 5;
+            case 'X': return 10;
+            case 'L': return 50;
+            case 'C': return 100;
+            case 'D': return 500;
+            case 'M': return 1000;
+            default: return 0;
+        }
+    }
+}
+
+在学习别的大神的解法时发现了这样的答案：
+class Solution:
+    def romanToInt(self, s: str) -> int:
+        d = {'I':1, 'IV':3, 'V':5, 'IX':8, 'X':10, 'XL':30, 'L':50, 'XC':80, 'C':100, 'CD':300, 'D':500, 'CM':800, 'M':1000}
+        return sum(d.get(s[max(i-1, 0):i+1], d[n]) for i, n in enumerate(s))
+
+运用字典，仅用三行代码解决了问题，十分值得学习
+1.构建一个字典记录所有罗马数字子串，注意长度为2的子串记录的值是（实际值 - 子串内左边罗马数字代表的数值）
+
+2.这样一来，遍历整个 ss 的时候判断当前位置和前一个位置的两个字符组成的字符串是否在字典内，如果在就记录值，不在就说明当前位置不存在小数字在前面的情况，直接记录当前位置字符对应值
+
+举个例子，遍历经过 IVIV 的时候先记录 II 的对应值 11 再往前移动一步记录 IVIV 的值 33，加起来正好是 IVIV 的真实值 44。max 函数在这里是为了防止遍历第一个字符的时候出现 [-1:0][−1:0] 的情况
+这个算法巧妙的地方就在于字典内记录的值并非都是其真实值，使得之后遍历计算时的过程简单了许多。
+
+另一种算法用了倒序判断的方法，从右向左将每个字符翻译为数字并进行累加，如果当前字符翻译过来的数字小于上一字符的数字，则*-1.其实大同小异
+class Solution:
+    def romanToInt(self, s: str) -> int:
+        mapping = {
+            "I":1,
+            "V":5,
+            "X":10,
+            "L":50,
+            "C":100,
+            "D":500,
+            "M":1000
+        }
+        result = 0
+        prev_num = 0
+        for c in reversed(s):
+            a = mapping.get(c)
+            if a < prev_num:
+                result -= a
+            else:
+                result += a
+                prev_num = a
+        return result
