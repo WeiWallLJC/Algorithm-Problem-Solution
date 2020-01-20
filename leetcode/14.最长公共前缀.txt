@@ -1,0 +1,115 @@
+14.最长公共前缀
+编写一个函数来查找字符串数组中的最长公共前缀。
+
+如果不存在公共前缀，返回空字符串 ""。
+
+示例 1:
+
+输入: ["flower","flow","flight"]
+输出: "fl"
+示例 2:
+
+输入: ["dog","racecar","car"]
+输出: ""
+解释: 输入不存在公共前缀。
+说明:
+
+所有输入只包含小写字母 a-z 。
+
+public String longestCommonPrefix(String[] strs) {
+   if (strs.length == 0) return "";
+   String prefix = strs[0];
+   for (int i = 1; i < strs.length; i++)
+       while (strs[i].indexOf(prefix) != 0) {
+           prefix = prefix.substring(0, prefix.length() - 1);
+           if (prefix.isEmpty()) return "";
+       }        
+   return prefix;
+}
+这种方法很好理解，首先对输入判空，然后声明一个prefix字符串初始化为输入的第一个字符串值用于存放前缀进行判断。
+通过indexOf方法进行判断，每次循环将前缀字符串缩短一位，直到prefix为空(判断失败)，或是indexOf返回0(prefix为strs[i]的前缀)。
+对输入的每个字符串判断之后，返回prefix值即为本题所要求的前缀字符串。
+
+public String longestCommonPrefix(String[] strs) {
+    if (strs == null || strs.length == 0) return "";
+    for (int i = 0; i < strs[0].length() ; i++){
+        char c = strs[0].charAt(i);
+        for (int j = 1; j < strs.length; j ++) {
+            if (i == strs[j].length() || strs[j].charAt(i) != c)
+                return strs[0].substring(0, i);             
+        }
+    }
+    return strs[0];
+}
+第二种方法则是通过对每一列的字符进行比较来得到前缀字符串。这种方法的好处是当遇到数组末尾有很短的字符串的情况时，可以明显减少判断的次数。
+
+参考官方答案之后，发现了分治解法，即将一个问题LCP(Si,...,Sj)分成两个子问题LCP(Si,...,Smid)和LCP(Smid,...,Sj)。
+public String longestCommonPrefix(String[] strs) {
+    if (strs == null || strs.length == 0) return "";    
+        return longestCommonPrefix(strs, 0 , strs.length - 1);
+}
+
+private String longestCommonPrefix(String[] strs, int l, int r) {
+    if (l == r) {
+        return strs[l];
+    }
+    else {
+        int mid = (l + r)/2;
+        String lcpLeft =   longestCommonPrefix(strs, l , mid);
+        String lcpRight =  longestCommonPrefix(strs, mid + 1,r);
+        return commonPrefix(lcpLeft, lcpRight);
+   }
+}
+
+String commonPrefix(String left,String right) {
+    int min = Math.min(left.length(), right.length());       
+    for (int i = 0; i < min; i++) {
+        if ( left.charAt(i) != right.charAt(i) )
+            return left.substring(0, i);
+    }
+    return left.substring(0, min);
+}
+
+除此之外还有二分法：
+public String longestCommonPrefix(String[] strs) {
+    if (strs == null || strs.length == 0)
+        return "";
+    int minLen = Integer.MAX_VALUE;
+    for (String str : strs)
+        minLen = Math.min(minLen, str.length());
+    int low = 1;
+    int high = minLen;
+    while (low <= high) {
+        int middle = (low + high) / 2;
+        if (isCommonPrefix(strs, middle))
+            low = middle + 1;
+        else
+            high = middle - 1;
+    }
+    return strs[0].substring(0, (low + high) / 2);
+}
+
+private boolean isCommonPrefix(String[] strs, int len){
+    String str1 = strs[0].substring(0,len);
+    for (int i = 1; i < strs.length; i++)
+        if (!strs[i].startsWith(str1))
+            return false;
+    return true;
+}
+
+我自己想到的解法是先找出所有字符串中最短的那个，然后将它的子串逐一与其他字符串进行比对：
+public String longestCommonPrefix(String[] strs) {
+    if (strs == null || strs.length == 0)
+        return "";
+    String str=strs[0];
+    for(int i=1;i<strs.length;i++){
+        if(str.length()>strs[i].length())
+            str=strs[i];
+    }
+    for (int i = 0; i < strs.length; i++)
+        while (strs[i].indexOf(str) != 0) {
+            str = str.substring(0, str.length() - 1);
+        if (str.isEmpty()) return "";
+        }        
+    return str;
+}
