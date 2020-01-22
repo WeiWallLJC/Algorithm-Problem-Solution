@@ -1,0 +1,67 @@
+303.区域和检索-数组不可变
+给定一个整数数组  nums，求出数组从索引 i 到 j  (i ≤ j) 范围内元素的总和，包含 i,  j 两点。
+
+示例：
+
+给定 nums = [-2, 0, 3, -5, 2, -1]，求和函数为 sumRange()
+
+sumRange(0, 2) -> 1
+sumRange(2, 5) -> -1
+sumRange(0, 5) -> -3
+说明:
+
+1.你可以假设数组不可变。
+2.会多次调用 sumRange 方法。
+
+最简单的方法为暴力法，对于每次调用sumRange方法，都使用for循环将每个元素逐一相加。
+private int[] data;
+
+public NumArray(int[] nums) {
+    data = nums;
+}
+
+public int sumRange(int i, int j) {
+    int sum = 0;
+    for (int k = i; k <= j; k++) {
+        sum += data[k];
+    }
+    return sum;
+}
+这种方法的缺点为耗时极长。
+
+因为本题会多次调用sumRange方法，所以另一种思路是通过使用缓存，将所有的计算结果存储在一张哈希表中，调用sumRange方法的时候再查找对应的值。
+import javafx.util.Pair;
+class NumArray {
+    private Map<Pair<Integer, Integer>, Integer> map = new HashMap<>();
+
+    public NumArray(int[] nums) {
+        for (int i = 0; i < nums.length; i++) {
+            int sum = 0;
+            for (int j = i; j < nums.length; j++) {
+                sum += nums[j];
+                map.put(new Pair(i, j), sum);
+            }
+        }
+    }
+
+    public int sumRange(int i, int j) {
+        return map.get(new Pair(i, j));
+    }
+}
+最终这种方法在遇到某个超长的用例时超出了时间限制。而因为这种方法需要将所有可能的计算结果提前存储至哈希表，所以需要的存储空间也很大。
+
+为了解决第二种方法占用空间的问题，可以使用第三种方法，这种方法也是通过存储结果利用缓存来计算。
+private int[] sum;
+
+public NumArray(int[] nums) {
+    sum = new int[nums.length + 1];
+    for (int i = 0; i < nums.length; i++) {
+        sum[i + 1] = sum[i] + nums[i];
+    }
+}
+
+public int sumRange(int i, int j) {
+    return sum[j + 1] - sum[i];
+}
+
+但与第二种方法不同的是，这种方法并非存储所有计算结果的值，而是只存储从第0个数加到第i+1个数的结果，最后再通过一个减法来得到从i到j的数字和。
