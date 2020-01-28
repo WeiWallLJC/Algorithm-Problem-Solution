@@ -1,0 +1,92 @@
+22.括号生成
+给出 n 代表生成括号的对数，请你写出一个函数，使其能够生成所有可能的并且有效的括号组合。
+
+例如，给出 n = 3，生成结果为：
+
+[
+  "((()))",
+  "(()())",
+  "(())()",
+  "()(())",
+  "()()()"
+]
+
+第一种方法为暴力法，生成所有2`2n种可能的括号生成情况，再从中找出有效的情况：
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> combinations = new ArrayList();
+        generateAll(new char[2 * n], 0, combinations);
+        return combinations;
+    }
+
+    public void generateAll(char[] current, int pos, List<String> result) {
+        if (pos == current.length) {
+            if (valid(current))
+                result.add(new String(current));
+        } else {
+            current[pos] = '(';
+            generateAll(current, pos+1, result);
+            current[pos] = ')';
+            generateAll(current, pos+1, result);
+        }
+    }
+
+    public boolean valid(char[] current) {
+        int balance = 0;
+        for (char c: current) {
+            if (c == '(') balance++;
+            else balance--;
+            if (balance < 0) return false;
+        }
+        return (balance == 0);
+    }
+}
+
+第二种方法为回溯法，与第一种不同，这种方法在每次添加字符之前就判断是否有效，然后再执行添加：
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> ans = new ArrayList();
+        backtrack(ans, "", 0, 0, n);
+        return ans;
+    }
+
+    public void backtrack(List<String> ans, String cur, int open, int close, int max){
+        if (cur.length() == max * 2) {
+            ans.add(cur);
+            return;
+        }
+
+        if (open < max)
+            backtrack(ans, cur+"(", open+1, close, max);
+        if (close < open)
+            backtrack(ans, cur+")", open, close+1, max);
+    }
+}
+
+第三种方法为闭合数法，理解起来有一定难度：
+思路
+
+为了枚举某些内容，我们通常希望将其表示为更容易计算的不相交子集的总和。
+
+考虑有效括号序列 S 的 闭包数：至少存在 index >= 0，使得 S[0], S[1], ..., S[2*index+1]是有效的。 显然，每个括号序列都有一个唯一的闭包号。 我们可以尝试单独列举它们。
+
+算法
+
+对于每个闭合数 c，我们知道起始和结束括号必定位于索引 0 和 2*c + 1。然后两者间的 2*c 个元素一定是有效序列，其余元素一定是有效序列。
+
+public List<String> generateParenthesis(int n) {
+        List<String> ans = new ArrayList();
+        if (n == 0) {
+            ans.add("");
+        } else {
+            for (int c = 0; c < n; ++c)
+                for (String left: generateParenthesis(c))
+                    for (String right: generateParenthesis(n-1-c))
+                        ans.add("(" + left + ")" + right);
+        }
+        return ans;
+    }
+
+方法三的理解： 对于任何一个括号组合（1对以上），可以表达为这么一种组合 ( left ) right 的形式。其中，若left 和 right 两部分的括号总数为 n-1对，
+那么新的组合 ( left ) right 则有n对，这样将n对括号求解，转化为n-1对的求解，以此类推直到零对括号可以直接给出空字符串的解。以3对为例，
+可拆解为 “( left=0对）right=2对”“( left=1对）right=1对”“( left=2对）right=0对”。对于上述题解给出的方案，如果缓存中间组合，可以减少搜索次数。
