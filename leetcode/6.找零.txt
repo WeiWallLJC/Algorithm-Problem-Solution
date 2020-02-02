@@ -1,0 +1,42 @@
+6.找零
+Z国的货币系统包含面值1元、4元、16元、64元共计4种硬币，以及面值1024元的纸币。现在小Y使用1024元的纸币购买了一件价值为N(0<N<=1024)的商品，
+请问最少他会收到多少硬币？
+
+输入描述:
+一行，包含一个数N。
+
+输出描述:
+一行，包含一个数，表示最少收到的硬币数。
+
+输入例子1:
+200
+
+输出例子1:
+17
+
+例子说明1:
+花200，需要找零824块，找12个64元硬币，3个16元硬币，2个4元硬币即可。
+
+简单题用傻瓜算法：
+import java.util.*;
+public class Main
+{
+    public static void main(String args[])
+    {
+        Scanner scanner=new Scanner(System.in);
+        int num=1024-scanner.nextInt();
+        int count=0;
+        int x=0;
+        x=num/64;
+        num-=x*64;
+        count+=x;
+        x=num/16;
+        num-=x*16;
+        count+=x;
+        x=num/4;
+        num-=x*4;
+        count+=x;
+        count+=num;
+        System.out.println(count);
+    }
+}
