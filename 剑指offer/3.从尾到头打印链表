@@ -1,0 +1,30 @@
+输入一个链表，按链表从尾到头的顺序返回一个ArrayList。
+
+第一种方法，因为题目要求顺序为从尾到头，所以栈可以很好的帮助我们解决这个问题：
+public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+        Stack<Integer> stack=new Stack<>();
+        while(listNode!=null)
+        {
+            stack.push(listNode.val);
+            listNode=listNode.next;
+        }
+        ArrayList<Integer> arl=new ArrayList();
+        while(!stack.isEmpty())
+            arl.add(stack.pop());
+        return arl;
+    }
+    
+第二种方法，不借助栈，直接使用递归将链表倒序输出填入ArrayList：
+public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
+        ArrayList<Integer> list=new ArrayList<Integer>();
+        func(list,listNode);
+        return list;
+    }
+    public void func(ArrayList<Integer> list,ListNode listNode)
+    {
+        if(listNode!=null)
+        {
+            func(list,listNode.next);
+            list.add(listNode.val);
+        }
+    }
