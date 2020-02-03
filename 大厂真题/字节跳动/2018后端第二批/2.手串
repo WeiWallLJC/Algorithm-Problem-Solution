@@ -1,0 +1,119 @@
+作为一个手串艺人，有金主向你订购了一条包含n个杂色串珠的手串——每个串珠要么无色，要么涂了若干种颜色。为了使手串的色彩看起来不那么单调，金主要求，手串
+上的任意一种颜色（不包含无色），在任意连续的m个串珠里至多出现一次（注意这里手串是一个环形）。手串上的颜色一共有c种。现在按顺时针序告诉你n个串珠的手
+串上，每个串珠用所包含的颜色分别有哪些。请你判断该手串上有多少种颜色不符合要求。即询问有多少种颜色在任意连续m个串珠中出现了至少两次。
+
+
+输入描述:
+第一行输入n，m，c三个数，用空格隔开。(1 <= n <= 10000, 1 <= m <= 1000, 1 <= c <= 50) 接下来n行每行的第一个数num_i(0 <= num_i <= c)表示第i颗珠
+子有多少种颜色。接下来依次读入num_i个数字，每个数字x表示第i颗柱子上包含第x种颜色(1 <= x <= c)
+
+输出描述:
+一个非负整数，表示该手链上有多少种颜色不符需求。
+
+输入例子1:
+5 2 3
+3 1 2 3
+0
+2 2 3
+1 2
+1 3
+
+输出例子1:
+2
+
+例子说明1:
+第一种颜色出现在第1颗串珠，与规则无冲突。
+第二种颜色分别出现在第 1，3，4颗串珠，第3颗与第4颗串珠相邻，所以不合要求。
+第三种颜色分别出现在第1，3，5颗串珠，第5颗串珠的下一个是第1颗，所以不合要求。
+总计有2种颜色的分布是有问题的。 
+这里第2颗串珠是透明的。
+
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args) {
+		Scanner scanner=new Scanner(System.in);
+		int n=scanner.nextInt();
+		int m=scanner.nextInt();
+		int c=scanner.nextInt();
+		long[] num_i=new long[n];
+		long res=0,res_num=0;
+		for(int i=0;i<n;i++) {
+			int t=scanner.nextInt();
+			for(int j=0;j<t;j++) {
+				num_i[i]+=(long)Math.pow(2, scanner.nextDouble()-1);
+			}
+		}
+		for(int k=0;k<n;k++) {
+			long model=0;
+			for(int i=k;i<m+k;i++) {
+				if((num_i[i%n]&model)!=0) {
+					res=res|(num_i[i%n]&model);
+				}
+			model=model|num_i[i%n];
+			}
+		}
+		long t;
+		while(res>0) {
+			t=res%2;
+			if(t==1) {
+				res_num++;
+			}
+			res=res/2;
+		}
+		System.out.println(res_num);
+	}
+}
+
+将每个珠子的颜色用二进制数保存，对应位置为1则表示有这个颜色，
+如珠子i包含1，2，3个颜色，则num_i[i]=7,即二进制111
+采用二进制与运算来检测对应颜色有没有重复的。在每趟m个珠子内进行比较颜色时，定义一个model来保存该趟内出现过的颜色，每次只需将珠子与model做与运算即可得
+到重复的颜色，然后将其结果与用来记录重复颜色的res做或运算就可以更新res，同时还要更新model，再进行下一次比较。
+最后res的二进制表示中有多少个1则代表有多少个重复颜色
+
+import java.util.*;
+public class Main{
+   public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        while(sc.hasNext()){
+            Cal(sc);
+        }
+    }
+    public static void Cal(Scanner sc){
+        int n=sc.nextInt(),m=sc.nextInt(), c=sc.nextInt(), r=0;
+        int[][] A=new int[n*2][c+1];
+        for(int i=0;i<n;i++){
+            int tt=sc.nextInt();
+            if(tt==0) {
+                A[i][0]=1;
+                A[i+n][0]=1;
+            }
+            else {
+                for(int j=0;j<tt;j++) {
+                    int t3=sc.nextInt();
+                    A[i][t3]=1;
+                    A[i+n][t3]=1;
+                }  
+            }
+        }
+        for(int i=1;i<=c;i++) {
+            Stack<Integer> st=new Stack<Integer>();
+            for(int j=0;j<n*2;j++) {
+                if(A[j][i]==1) st.push(j);
+            }
+            if(PanDu(st,m))r++;
+        }
+        System.out.println(r);
+    }
+    public static boolean PanDu(Stack<Integer> t,int m) {   
+        int start=t.pop();
+        while(!t.isEmpty()) {       
+            int end=t.pop();       
+            if(start-end<m) return true;   
+          start=end;        
+             }
+        return false;    
+   }
+}
+用二维数组存储颜色情况，并且为了处理环，数组长度定为了2*n。
+对每种颜色分别处理，新建一个栈，若多次出现颜色的索引差小于m，说明颜色重复，计数加1。
