@@ -1,0 +1,55 @@
+大家都知道斐波那契数列，现在要求输入一个整数n，请你输出斐波那契数列的第n项（从0开始，第0项为0）。
+n<=39
+
+方法1：
+public int Fibonacci(int n) {
+        int num1=0;
+        int num2=1;
+        int num=0;
+        if(n==0)
+            return 0;
+        if(n==1)
+            return 1;
+        for(int i=2;i<=n;i++)
+        {
+            num=num1+num2;
+            num1=num2;
+            num2=num;
+        }
+        return num;
+    }
+
+方法2（递归）：
+public int Fibonacci(int n) {
+        if(n<=1){
+            return n;
+        }
+        return Fibonacci(n-1) + Fibonacci(n-2);
+    }
+    
+方法3（数组存储）：
+public int Fibonacci(int n) {
+        int ans[] = new int[40];
+        ans[0] = 0;
+        ans[1] = 1;
+        for(int i=2;i<=n;i++){
+            ans[i] = ans[i-1] + ans[i-2];
+        }
+        return ans[n];
+    }
+    
+方法4（对方法1的优化）：
+public int Fibonacci(int n) {
+        if(n == 0){
+            return 0;
+        }else if(n == 1){
+            return 1;
+        }
+        int sum = 1;
+        int one = 0;
+        for(int i=2;i<=n;i++){
+            sum = sum + one;
+            one = sum - one;
+        }
+        return sum;
+    }
