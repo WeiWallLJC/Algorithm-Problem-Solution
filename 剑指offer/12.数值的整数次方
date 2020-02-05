@@ -1,0 +1,35 @@
+给定一个double类型的浮点数base和int类型的整数exponent。求base的exponent次方。
+保证base和exponent不同时为0
+
+直接用pow方法：
+public double Power(double base, int exponent) {
+        return Math.pow(base,exponent);
+    }
+    
+累乘法：
+public double Power(double base, int exponent) {
+        double result = 1.0d;
+        int e = exponent > 0 ? exponent : -exponent;
+        for(int i = 1 ; i <= e; i ++){
+            result *= base;
+        }
+        return exponent > 0 ? result : 1 / result;
+    }
+    
+快速幂算法：
+public static double Power(double base, int exp) {
+        boolean flag = false;
+        if (exp < 0) {
+            flag = true;
+            exp = -exp;
+        }
+        double ans = 1;
+        while (exp > 0) {
+            if ((exp & 1) == 1) {
+                ans = ans * base;
+            }
+            exp >>= 1;
+            base *= base;
+        }
+        return flag ? 1 / ans : ans;
+    }
