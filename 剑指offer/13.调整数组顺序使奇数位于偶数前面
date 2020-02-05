@@ -1,0 +1,25 @@
+输入一个整数数组，实现一个函数来调整该数组中数字的顺序，使得所有的奇数位于数组的前半部分，所有的偶数位于数组的后半部分，并保证奇数和奇数，偶数和偶数之间
+的相对位置不变。
+
+个人解法，要注意不能简单的进行两个数字的交换，而要将中间的数组整体后移，否则会出错。
+public void reOrderArray(int [] array) {
+        for(int i=0;i<array.length;i++)
+        {
+            if(array[i]%2==0)
+            {
+                for(int j=i+1;j<array.length;j++)
+                {
+                    if(array[j]%2==1)
+                    {
+                        int x=array[j];
+                        for(int k=j;k>i;k--)
+                            array[k]=array[k-1];
+                        array[i]=x;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+如果要使用交换的话，判断条件就应改为判断相邻两个数字是否为一奇一偶。
