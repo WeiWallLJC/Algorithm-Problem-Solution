@@ -16,4 +16,4 @@ public boolean HasSubtree(TreeNode root1,TreeNode root2)
             return false;
         return judgeSubtree(root1.left,root2.left)&&judgeSubtree(root1.right,root2.right);
     }
-用递归的方法判断root2是不是root1的子树
+用递归的方法判断root2是不是root1的子树。
