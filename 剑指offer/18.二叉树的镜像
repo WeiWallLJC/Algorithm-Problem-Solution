@@ -1,0 +1,44 @@
+操作给定的二叉树，将其变换为源二叉树的镜像。
+输入描述:
+二叉树的镜像定义：源二叉树 
+    	    8
+    	   /  \
+    	  6   10
+    	 / \  / \
+    	5  7 9 11
+    	镜像二叉树
+    	    8
+    	   /  \
+    	  10   6
+    	 / \  / \
+    	11 9 7  5
+
+public void Mirror(TreeNode root) {
+        if(root==null)
+            return;
+        TreeNode x=root.left;
+        root.left=root.right;
+        root.right=x;
+        Mirror(root.left);
+        Mirror(root.right);
+    }
+通过递归，对根结点的左右子树轮流做镜像处理。
+
+非递归方法：
+public void Mirror(TreeNode root) {
+        if(root == null) return;
+        Queue<TreeNode> nodes = new LinkedList<>();
+        TreeNode curr, temp;
+        nodes.offer(root);
+        while(!nodes.isEmpty()){
+            int len = nodes.size();
+            for(int i = 0; i < len; i++){
+                curr = nodes.poll();
+                temp = curr.left;
+                curr.left = curr.right;
+                curr.right = temp;
+                if(curr.left != null) nodes.offer(curr.left);
+                if(curr.right != null) nodes.offer(curr.right);
+            }
+        }
+    }
