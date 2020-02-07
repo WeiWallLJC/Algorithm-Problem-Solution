@@ -1,0 +1,60 @@
+定义栈的数据结构，请在该类型中实现一个能够得到栈中所含最小元素的min函数（时间复杂度应为O（1））。
+
+可以用两个栈，一个存储所有元素，一个存储元素中的最小值，每次pop时判断出栈元素是否为最小值，如果是的话最小值栈执行pop操作：
+private static Stack<Integer> stack=new Stack<Integer>();
+    private static Stack<Integer> min=new Stack<Integer>();
+    public void push(int node) {
+        if(min.isEmpty())
+            min.push(node);
+        else if(node<min.peek())
+            min.push(node);
+        stack.push(node);
+    }
+    
+    public void pop() {
+        if(stack.peek()==min.peek())
+            min.pop();
+        stack.pop();
+    }
+    
+    public int top() {
+        return stack.peek();
+    }
+    
+    public int min() {
+        return min.peek();
+    }
+    
+不使用第二个栈，只用一个整型数min存储最小值,在入栈元素的同时存储一个当前栈内最小元素，出栈操作同理多出栈一个最小元素：
+private static Stack<Integer> stack=new Stack<Integer>();
+    private static int min=Integer.MAX_VALUE;
+    public void push(int node) {
+        if(stack.isEmpty())
+        {
+            min=node;
+            stack.push(node);
+        }
+        else if(node<min)
+        {
+            stack.push(min);
+            min=node;
+        }
+        stack.push(node);
+    }
+    
+    public void pop() {
+        if(stack.peek()==min)
+        {
+            stack.pop();
+            min=stack.peek();
+        }
+        stack.pop();
+    }
+    
+    public int top() {
+        return stack.peek();
+    }
+    
+    public int min() {
+        return min;
+    }
