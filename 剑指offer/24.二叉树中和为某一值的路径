@@ -2,6 +2,7 @@
 : 在返回值的list中，数组长度大的数组靠前)
 
 递归法(注意题目要求路径终点为叶结点)：
+1.
 ArrayList<ArrayList<Integer>> result=new ArrayList<ArrayList<Integer>>();
     public ArrayList<ArrayList<Integer>> FindPath(TreeNode root,int target) {
         if(root==null)
@@ -34,3 +35,37 @@ ArrayList<ArrayList<Integer>> result=new ArrayList<ArrayList<Integer>>();
         if(sum<target&&root.right!=null)
             isTargetPath(root.right,target,sum,path,index);
     }
+
+2.
+public ArrayList<ArrayList<Integer>> FindPath(TreeNode root,int target) {
+        int sum=0;
+        ArrayList<ArrayList<Integer>> result=new ArrayList<ArrayList<Integer>>();
+        if(root==null)
+            return result;
+        ArrayList<Integer> list=new ArrayList<Integer>();
+        isTargetPath(root,target,sum,result,list);
+        return result;
+    }
+    public void isTargetPath(TreeNode root,int target,int sum,ArrayList<ArrayList<Integer>> result,ArrayList<Integer> list)
+    {
+        if(root==null)
+            return;
+        sum+=root.val;
+        
+        if(root.left==null&&root.right==null)
+        {
+            if(sum==target)
+            {
+                list.add(root.val);
+                result.add(new ArrayList<Integer>(list));
+                list.remove(list.size()-1);
+            }
+            return;
+        }
+        
+        list.add(root.val);
+        isTargetPath(root.left,target,sum,result,list);
+        isTargetPath(root.right,target,sum,result,list);
+        list.remove(list.size()-1);
+    }
+ 两种方法本质完全相同，细节不同，记录一下。
