@@ -1,0 +1,46 @@
+输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。
+
+后序遍历数组的特点是最后的数字为根节点，在遍历前面的数字时，从第一个比根节点大的树开始，之后的数全部比根节点大，否则就不是后序遍历。
+整个数组满足此条件后，再判断其左右子树是否全部满足：
+    
+public boolean helpVerify(int [] sequence, int start, int root){
+        if(start >= root)return true;
+        int key = sequence[root];
+        int i;
+
+        for(i=start; i < root; i++)
+            if(sequence[i] > key)
+                break;
+
+        for(int j = i; j < root; j++)
+            if(sequence[j] < key)
+                return false;
+        return helpVerify(sequence, start, i-1) && helpVerify(sequence, i, root-1);
+    }
+    public boolean VerifySquenceOfBST(int [] sequence) {
+        if(sequence == null || sequence.length == 0)
+            return false;
+        return helpVerify(sequence, 0, sequence.length-1);
+    }
+    
+public boolean VerifySquenceOfBST(int [] sequence) {
+        if(sequence.length==0){
+            return false;
+        }
+        int root = sequence.length-1;
+        int count = 0;
+        while(root!=0){
+            while(sequence[count] < sequence[root]){
+                count++;
+            }
+            while(sequence[count] > sequence[root]){
+                count++;
+            }
+            if(count < root){
+                return false;
+            }
+            root--;
+            count = 0;
+        }
+        return true;
+    }
