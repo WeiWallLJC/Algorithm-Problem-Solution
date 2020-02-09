@@ -1,0 +1,33 @@
+输入一个字符串,按字典序打印出该字符串中字符的所有排列。例如输入字符串abc,则打印出由字符a,b,c所能排列出来的所有字符串abc,acb,bac,bca,cab和cba。
+输入描述:
+输入一个字符串,长度不超过9(可能有字符重复),字符只包括大小写字母。
+
+通过对字符串中两个不同的字符进行交换来得到一个重新排列的字符串，调用递归得到所有排列的结果：
+public ArrayList<String> Permutation(String str) {
+        ArrayList<String> list=new ArrayList<String>();
+        if(str.length()==0||str==null)
+            return list;
+        func(list,0,str.toCharArray());
+        Collections.sort(list);
+        return list;
+    }
+    public void func(ArrayList<String> list,int index,char[] ch)
+    {
+        if(index==ch.length-1)
+            list.add(new String(ch));
+        for(int i=index;i<ch.length;i++)
+        {
+            if(i==index||ch[i]!=ch[index])
+            {
+                swap(ch,i,index);
+                func(list,index+1,ch);
+                swap(ch,i,index);
+            }
+        }
+    }
+    public void swap(char[] ch,int i,int j)
+    {
+        char cha=ch[i];
+        ch[i]=ch[j];
+        ch[j]=cha;
+    }
