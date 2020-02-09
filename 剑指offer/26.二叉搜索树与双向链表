@@ -1,0 +1,44 @@
+输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。
+
+通过中序遍历将节点排序，再将每个节点的左右指针指向对应的前后节点：
+public TreeNode Convert(TreeNode pRootOfTree) {
+        if(pRootOfTree==null)
+            return null;
+        ArrayList<TreeNode> list=new ArrayList<TreeNode>();
+        func(pRootOfTree,list);
+        return function(list);
+    }
+    public void func(TreeNode root,ArrayList<TreeNode> list)
+    {
+        if(root.left!=null)
+            func(root.left,list);
+        list.add(root);
+        if(root.right!=null)
+            func(root.right,list);
+    }
+    public TreeNode function(ArrayList<TreeNode> list)
+    {
+        for(int i=0;i<list.size()-1;i++)
+        {
+            list.get(i).right=list.get(i+1);
+            list.get(i+1).left=list.get(i);
+        }
+        return list.get(0);
+    }
+    
+从二叉搜索树最右端的叶节点开始，调用递归调整每个节点左右指针的指向：
+TreeNode pre=null;
+    public TreeNode Convert(TreeNode pRootOfTree) {
+        if(pRootOfTree==null)
+            return null;
+        Convert(pRootOfTree.right);
+        if(pre==null)
+            pre=pRootOfTree;
+        else{
+            pRootOfTree.right=pre;
+            pre.left=pRootOfTree;
+            pre=pRootOfTree;
+        }
+        Convert(pRootOfTree.left);
+        return pre;
+    }
