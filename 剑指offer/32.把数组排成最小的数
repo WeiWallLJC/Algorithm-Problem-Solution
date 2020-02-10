@@ -10,6 +10,7 @@ public String PrintMinNumber(int [] numbers) {
             list.add(numbers[i]);
         Collections.sort(list,new Comparator<Integer>()
             {
+                @Override
                 public int compare(Integer int1,Integer int2)
                 {
                     String s1=int1+""+int2;
