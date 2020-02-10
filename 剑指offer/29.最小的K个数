@@ -1,0 +1,61 @@
+输入n个整数，找出其中最小的K个数。例如输入4,5,1,6,2,7,3,8这8个数字，则最小的4个数字是1,2,3,4,。
+
+思路很简单，先排序，再输出最小的K个数，以插排为例：
+public ArrayList<Integer> GetLeastNumbers_Solution(int [] input, int k) {
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        if(k<= 0 || k > input.length)return result;
+
+        for(int i = 1; i< k; i++){
+            int j = i-1;
+            int unFindElement = input[i];
+            while(j >= 0 && input[j] > unFindElement){
+                input[j+1] = input[j];
+                j--;
+            }
+            input[j+1] = unFindElement;
+        }
+
+        for(int i = k; i < input.length; i++){
+            if(input[i] < input[k-1]){
+                int newK = input[i];
+                int j = k-1;
+                while(j >= 0 && input[j] > newK){
+                    input[j+1] = input[j];
+                    j--;
+                }
+                input[j+1] = newK;
+            }
+        }
+
+        for(int i=0; i < k; i++)
+            result.add(input[i]);
+        return result;
+    }
+
+用最大堆保存k个数，在读取后面数的同时不断调整最大堆：
+public ArrayList<Integer> GetLeastNumbers_Solution(int[] input, int k) {
+       ArrayList<Integer> result = new ArrayList<Integer>();
+       int length = input.length;
+       if(k > length || k == 0){
+           return result;
+       }
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<Integer>(k, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2.compareTo(o1);
+            }
+        });
+        for (int i = 0; i < length; i++) {
+            if (maxHeap.size() != k) {
+                maxHeap.offer(input[i]);
+            } else if (maxHeap.peek() > input[i]) {
+                Integer temp = maxHeap.poll();
+                temp = null;
+                maxHeap.offer(input[i]);
+            }
+        }
+        for (Integer integer : maxHeap) {
+            result.add(integer);
+        }
+        return result;
+    }
