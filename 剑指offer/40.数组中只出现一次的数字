@@ -1,0 +1,62 @@
+HashMap法：
+public void FindNumsAppearOnce(int [] array,int num1[] , int num2[]) {
+        if(array.length<2)
+            return;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for(int i=0;i<array.length;i++){
+            Integer key = array[i];
+            Integer value = map.get(key);
+            if(value == null){
+                map.put(key, 1);
+            }
+            else {
+                map.put(key, value+1);
+            }
+        }
+        int index=0;
+        for(int i=0;i<array.length;i++){
+            if(map.get(array[i]) == 1 && index == 0){
+                num1[index] = array[i];
+                index ++;
+            }
+            else if(map.get(array[i]) == 1 && index == 1){
+                num2[index-1] = array[i];
+                break;
+            }
+        }
+    }
+
+两个相同数字异或=0，一个数和0异或还是它本身，因此用异或的做法：
+public void FindNumsAppearOnce(int[] array, int[] num1, int[] num2)    {
+        int length = array.length;
+        if(length == 2){
+            num1[0] = array[0];
+            num2[0] = array[1];
+            return;
+        }
+        int bitResult = 0;
+        for(int i = 0; i < length; ++i){
+            bitResult ^= array[i];
+        }
+        int index = findFirst1(bitResult);
+        for(int i = 0; i < length; ++i){
+            if(isBit1(array[i], index)){
+                num1[0] ^= array[i];
+            }else{
+                num2[0] ^= array[i];
+            }
+        }
+    }
+     
+    private int findFirst1(int bitResult){
+        int index = 0;
+        while(((bitResult & 1) == 0) && index < 32){
+            bitResult >>= 1;
+            index++;
+        }
+        return index;
+    }
+     
+    private boolean isBit1(int target, int index){
+        return ((target >> index) & 1) == 1;
+    }
