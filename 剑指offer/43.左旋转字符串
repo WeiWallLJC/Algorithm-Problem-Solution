@@ -1,0 +1,37 @@
+汇编语言中有一种移位指令叫做循环左移（ROL），现在有个简单的任务，就是用字符串模拟这个指令的运算结果。对于一个给定的字符序列S，请你把其循环左移K位后的序
+列输出。例如，字符序列S=”abcXYZdef”,要求输出循环左移3位后的结果，即“XYZdefabc”。是不是很简单？OK，搞定它！
+
+使用substring的方法：
+public String LeftRotateString(String str,int n) {
+        if(str.length()==0)
+            return "";
+        String str1=str.substring(0,n);
+        String str2=str.substring(n,str.length());
+        return str2+str1;
+    }
+    
+但是为了应对面试的考察，还是尽量少用写好的方法。
+原理：YX = (XTYT)T，所以对字符串进行三次反转操作
+public String LeftRotateString(String str,int n)
+    {
+        char []c=str.toCharArray();
+        if(c.length<n)return "";
+        reverse(c,0,n-1);
+        reverse(c,n,c.length-1);
+        reverse(c,0,c.length-1);
+        StringBuilder sb=new StringBuilder();
+        for(char t:c)sb.append(t);
+        return sb.toString();
+         
+    }
+    public void reverse(char []c,int low,int high)
+    {
+        while(low<high)
+        {
+            char temp=c[low];
+            c[low]=c[high];
+            c[high]=temp;
+            low++;
+            high--;
+        }
+    }
