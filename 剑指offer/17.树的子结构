@@ -4,7 +4,7 @@ public boolean HasSubtree(TreeNode root1,TreeNode root2)
     {
         if(root1==null||root2==null)
             return false;
-        return judgeSubtree(root1,root2)||judgeSubtree(root1.left,root2)||judgeSubtree(root1.right,root2);
+        return judgeSubtree(root1,root2)||HasSubtree(root1.left,root2)||HasSubtree(root1.right,root2);
     }
     public boolean judgeSubtree(TreeNode root1,TreeNode root2)
     {
@@ -16,4 +16,4 @@ public boolean HasSubtree(TreeNode root1,TreeNode root2)
             return false;
         return judgeSubtree(root1.left,root2.left)&&judgeSubtree(root1.right,root2.right);
     }
-用递归的方法判断root2是不是root1的子树。
+用递归的方法判断root2是不是root1的子树。注意通过左右子树HasSubtree的递归完成大树遍历。
