@@ -23,3 +23,28 @@ public void reOrderArray(int [] array) {
     }
     
 如果要使用交换的话，判断条件就应改为判断相邻两个数字是否为一奇一偶。
+
+还有另一种方法就是多次遍历数组，先将奇数按顺序存入一个数组，再将偶数按顺序存入，最后赋给原数组：
+public void reOrderArray(int [] array) {
+        ArrayList<Integer> list=new ArrayList<Integer>();
+        int[] x=new int[array.length];
+        int num=0;
+        for(int i=0;i<array.length;i++)
+        {
+            if(array[i]%2==1)
+            {
+                x[num]=array[i];
+                num++;
+            }
+        }
+        for(int i=0;i<array.length;i++)
+        {
+            if(array[i]%2==0)
+            {
+                x[num]=array[i];
+                num++;
+            }
+        }
+        for(int i=0;i<array.length;i++)
+            array[i]=x[i];
+    }
