@@ -26,7 +26,6 @@ public void reOrderArray(int [] array) {
 
 还有另一种方法就是多次遍历数组，先将奇数按顺序存入一个数组，再将偶数按顺序存入，最后赋给原数组：
 public void reOrderArray(int [] array) {
-        ArrayList<Integer> list=new ArrayList<Integer>();
         int[] x=new int[array.length];
         int num=0;
         for(int i=0;i<array.length;i++)
