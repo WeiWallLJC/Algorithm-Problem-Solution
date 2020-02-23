@@ -38,31 +38,31 @@ for (int i = 0; i < len; i++) {
 除此之外要注意，有可能出现两个以上的重复数字，而每次判断之后会从下一位开始判断，如果仅仅是用这种方法判断的话最终只会删掉一个重复数字，为了将重复数字删
 得只剩一个，需要在对数组进行操作后将i-1，从前一位进行判断：
 public int removeDuplicates(int[] nums) {
-        int len=nums.length;
-        if(len==0)
-            return len;
-        for(int i=0;i<len-1;i++)
-        {
-            if(nums[i]==nums[i+1])
-            {
-                for(int j=i+1;j<nums.length-1;j++)
-                    nums[j]=nums[j+1];
-                len--;
-                i--;
-            }
-        }
+    int len=nums.length;
+    if(len==0)
         return len;
+    for(int i=0;i<len-1;i++)
+    {
+        if(nums[i]==nums[i+1])
+        {
+            for(int j=i+1;j<nums.length-1;j++)
+                nums[j]=nums[j+1];
+            len--;
+            i--;
+        }
     }
+    return len;
+}
     
 第二种方法是快慢指针法，用两个指针一个指向当前位置，一个指向跳过重复数字之后的位置，再逐一进行赋值：
 public int removeDuplicates(int[] nums) {
-        if (nums.length == 0) return 0;
-        int i = 0;
-        for (int j = 1; j < nums.length; j++) {
-            if (nums[j] != nums[i]) {
-                i++;
-                nums[i] = nums[j];
-            }
+    if (nums.length == 0) return 0;
+    int i = 0;
+    for (int j = 1; j < nums.length; j++) {
+        if (nums[j] != nums[i]) {
+            i++;
+            nums[i] = nums[j];
         }
-        return i + 1;
     }
+    return i + 1;
+}
