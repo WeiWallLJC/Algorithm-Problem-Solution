@@ -60,7 +60,7 @@ class Solution:
             for i in range(a):
                 y+=int(lis[i])*(10**i)
             y=0-y
-if -2**31<res<2**31-1:
+        if -2**31<res<2**31-1:
             	return y
         return 0
 
