@@ -45,10 +45,10 @@ class Solution {
             temp /= 10;
             nums++;
         }
-        left = nums - 1;
-        right = 0;
-        while (left > right) {
-            if (getDigit(x, left--) != getDigit(x, right++))
+        right = nums - 1;
+        left = 0;
+        while (left < right) {
+            if (getDigit(x, left++) != getDigit(x, right--))
                 return false;            
         }
         return true;
