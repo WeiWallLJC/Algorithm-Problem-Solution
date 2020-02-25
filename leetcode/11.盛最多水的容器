@@ -1,0 +1,44 @@
+给定 n 个非负整数 a1，a2，...，an，每个数代表坐标中的一个点 (i, ai) 。在坐标内画 n 条垂直线，垂直线 i 的两个端点分别为 (i, ai) 和 (i, 0)。找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。
+
+说明：你不能倾斜容器，且 n 的值至少为 2。
+
+
+
+图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（表示为蓝色部分）的最大值为 49。
+
+ 
+
+示例:
+
+输入: [1,8,6,2,5,4,8,3,7]
+输出: 49
+
+暴力法：
+public int maxArea(int[] height) {
+        if(height.length<2)
+            return 0;
+        int maxarea=0;
+        for(int i=0;i<height.length-1;i++)
+        {
+            for(int j=1;j<height.length;j++)
+            {
+                if(Math.min(height[i],height[j])*(j-i)>maxarea)
+                    maxarea=Math.min(height[i],height[j])*(j-i);
+            }
+        }
+        return maxarea;
+    }
+    
+双指针法，先用两个指针指向数组两端，每一步中都将高度较低的一端向另一端移动以寻求最大面积，由于面积取决于边长短的那一端假设为m，所以要想得到比当前更大
+的面积，边长短的那一端必须舍弃，因为如果不舍弃，高最大就是m，而随着指针的移动宽会一直减小，因此面积只会越来越小：
+public int maxArea(int[] height) {
+        int maxarea = 0, l = 0, r = height.length - 1;
+        while (l < r) {
+            maxarea = Math.max(maxarea, Math.min(height[l], height[r]) * (r - l));
+            if (height[l] < height[r])
+                l++;
+            else
+                r--;
+        }
+        return maxarea;
+    }
