@@ -24,12 +24,7 @@ public ListNode FindKthToTail(ListNode head,int k) {
 先得到链表总长度，再输出倒数第k个结点的方法：
 public ListNode FindKthToTail(ListNode head,int k) {
         int totalNum = 0;
-        if(head != null){
-            totalNum++;
-        }else{
-            return null;
-        }
-        ListNode currentNode = head.next;
+        ListNode currentNode = head;
         while(currentNode != null){
             totalNum++;
             currentNode = currentNode.next;
